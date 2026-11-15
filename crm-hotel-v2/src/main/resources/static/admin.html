@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración · Hotel 3 Estrellas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body class="pagina-admin">
+
+<nav class="navbar navbar-dark barra-superior">
+  <div class="container-fluid px-4">
+    <span class="navbar-brand fw-bold"> Panel de administración</span>
+    <div class="d-flex align-items-center gap-3">
+      <span id="infoSesion" class="text-white small"></span>
+      <form method="post" action="/logout" class="m-0">
+        <button class="btn btn-sm btn-dorado" type="submit">Cerrar sesión</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div id="aviso" class="alert position-fixed top-0 end-0 m-3 shadow" hidden></div>
+
+<main class="container-fluid px-4 py-4">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" type="button" data-bs-toggle="tab" data-bs-target="#panel-reservaciones" data-seccion="reservaciones">Reservaciones</button></li>
+    <li class="nav-item solo-admin"><button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#panel-habitaciones" data-seccion="habitaciones">Habitaciones</button></li>
+    <li class="nav-item solo-admin"><button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#panel-tipos" data-seccion="tipos">Tipos y precios</button></li>
+    <li class="nav-item"><button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#panel-resenas" data-seccion="resenas">Reseñas</button></li>
+    <li class="nav-item"><button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#panel-clientes" data-seccion="clientes">Clientes</button></li>
+    <li class="nav-item solo-admin"><button class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#panel-usuarios" data-seccion="usuarios">Usuarios</button></li>
+  </ul>
+
+  <div class="tab-content pt-4">
+
+    <div class="tab-pane fade show active" id="panel-reservaciones">
+      <div class="table-responsive" id="tabla-reservaciones"></div>
+    </div>
+
+    <div class="tab-pane fade solo-admin" id="panel-habitaciones">
+      <form id="formNuevaHab" class="tarjeta p-3 mb-4 d-flex flex-wrap gap-2 align-items-end">
+        <div><label class="form-label small mb-1">Número</label><input id="nuevaNumero" class="form-control" maxlength="10" required></div>
+        <div><label class="form-label small mb-1">Tipo</label><select id="nuevaTipo" class="form-select" required></select></div>
+        <button class="btn btn-azul" type="submit">Agregar habitación</button>
+      </form>
+      <div class="table-responsive" id="tabla-habitaciones"></div>
+    </div>
+
+    <div class="tab-pane fade solo-admin" id="panel-tipos">
+      <div id="tabla-tipos"></div>
+    </div>
+
+    <div class="tab-pane fade" id="panel-resenas">
+      <div id="lista-resenas"></div>
+    </div>
+
+    <div class="tab-pane fade" id="panel-clientes">
+      <div class="table-responsive" id="tabla-clientes"></div>
+    </div>
+
+    <div class="tab-pane fade solo-admin" id="panel-usuarios">
+      <form id="formUsuario" class="tarjeta p-3 mb-4 d-flex flex-wrap gap-2 align-items-end">
+        <div><label class="form-label small mb-1">Usuario</label><input id="uUsername" class="form-control" maxlength="100" required></div>
+        <div><label class="form-label small mb-1">Contraseña (mín. 6)</label><input id="uPassword" type="password" class="form-control" required></div>
+        <div><label class="form-label small mb-1">Correo</label><input id="uEmail" type="email" class="form-control" maxlength="100" required></div>
+        <div><label class="form-label small mb-1">Rol</label>
+          <select id="uRol" class="form-select"><option value="RECEPCIONISTA">Recepcionista</option><option value="ADMIN">Administrador</option></select>
+        </div>
+        <button class="btn btn-azul" type="submit">Crear usuario</button>
+      </form>
+      <div class="table-responsive" id="tabla-usuarios"></div>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+let sesion = null;
+let tiposCache = [];
+
+function esc(t) {
+  const d = document.createElement('div');
+  d.textContent = t ?? '';
+  return d.innerHTML;
+}
+function esAdmin() {
+  return sesion && sesion.rol === 'ADMIN';
+}
+function mostrar(texto, tipo = 'success') {
+  const el = $('aviso');
+  el.className = `alert alert-${tipo} position-fixed top-0 end-0 m-3 shadow`;
+  el.textContent = texto;
+  el.hidden = false;
+  clearTimeout(mostrar.t);
+  mostrar.t = setTimeout(() => { el.hidden = true; }, 3500);
+}
+async function api(url, opciones = {}) {
+  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opciones });
+  if (res.status === 401) { location.href = '/login.html'; throw new Error('Tu sesión expiró'); }
+  if (res.status === 403) throw new Error('No tienes permiso para esta acción');
+  if (!res.ok) {
+    const texto = await res.text();
+    let msg = 'Ocurrió un error';
+    try { msg = JSON.parse(texto).error || msg; } catch (e) { msg = texto || msg; }
+    throw new Error(msg);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+async function cargar(seccion) {
+  try {
+    if (seccion === 'reservaciones') await cargarReservaciones();
+    if (seccion === 'habitaciones') await cargarHabitaciones();
+    if (seccion === 'tipos') await cargarTipos();
+    if (seccion === 'resenas') await cargarResenas();
+    if (seccion === 'clientes') await cargarClientes();
+    if (seccion === 'usuarios') await cargarUsuarios();
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== RESERVACIONES =====
+async function cargarReservaciones() {
+  const lista = await api('/api/reservaciones');
+  const estados = ['CONFIRMADA', 'CANCELADA', 'COMPLETADA'];
+  $('tabla-reservaciones').innerHTML = lista.length ? `
+    <table class="table table-hover align-middle bg-white">
+      <thead><tr><th>#</th><th>Cliente</th><th>Habitación</th><th>Fechas</th><th>Personas</th><th>Total</th><th>Pago</th><th>Estado</th><th></th></tr></thead>
+      <tbody>${lista.map(r => `
+        <tr>
+          <td>${r.id}</td>
+          <td>${esc(r.cliente?.nombre)}<br><small class="text-muted">${esc(r.cliente?.telefono)} · ${esc(r.cliente?.email)}</small></td>
+          <td>${esc(r.habitacion?.numero)} <small class="text-muted">${esc(r.habitacion?.tipoHabitacion?.nombre)}</small></td>
+          <td>${esc(r.fechaEntrada)} → ${esc(r.fechaSalida)}</td>
+          <td>${r.numeroHuespedes}</td>
+          <td>$${r.costo}</td>
+          <td>${esc(r.metodoPago)}</td>
+          <td>
+            <select class="form-select form-select-sm" onchange="cambiarEstado(${r.id}, this.value)">
+              ${estados.map(s => `<option ${s === r.status ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+          </td>
+          <td>${esAdmin() ? `<button class="btn btn-sm btn-outline-danger" onclick="eliminarReservacion(${r.id})">Eliminar</button>` : ''}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>` : '<p class="text-muted">No hay reservaciones todavía.</p>';
+}
+
+async function cambiarEstado(id, status) {
+  try {
+    await api(`/api/reservaciones/${id}`, { method: 'PUT', body: JSON.stringify({ status }) });
+    mostrar('Estado actualizado');
+  } catch (e) {
+    mostrar(e.message, 'danger');
+    cargarReservaciones();
+  }
+}
+
+async function eliminarReservacion(id) {
+  if (!confirm('¿Eliminar esta reservación? También se borran sus pagos.')) return;
+  try {
+    await api(`/api/reservaciones/${id}`, { method: 'DELETE' });
+    mostrar('Reservación eliminada');
+    cargarReservaciones();
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== HABITACIONES (solo ADMIN) =====
+async function cargarHabitaciones() {
+  const [habitaciones, tipos] = await Promise.all([api('/api/habitaciones'), api('/api/tipos-habitacion')]);
+  tiposCache = tipos;
+  const opciones = (sel) => tipos.map(t =>
+    `<option value="${t.id}" ${t.id === sel ? 'selected' : ''}>${esc(t.nombre)}</option>`).join('');
+  $('nuevaTipo').innerHTML = opciones(null);
+  $('tabla-habitaciones').innerHTML = `
+    <table class="table bg-white align-middle">
+      <thead><tr><th>Número</th><th>Tipo</th><th></th><th></th></tr></thead>
+      <tbody>${habitaciones.map(h => `
+        <tr>
+          <td><input class="form-control form-control-sm" style="width:90px" id="hab-num-${h.id}" value="${esc(h.numero)}"></td>
+          <td><select class="form-select form-select-sm" id="hab-tipo-${h.id}">${opciones(h.tipoHabitacion?.id)}</select></td>
+          <td><button class="btn btn-sm btn-azul" onclick="guardarHabitacion(${h.id})">Guardar</button></td>
+          <td><button class="btn btn-sm btn-outline-danger" onclick="eliminarHabitacion(${h.id})">Eliminar</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+$('formNuevaHab').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await api('/api/habitaciones', { method: 'POST', body: JSON.stringify({
+      numero: $('nuevaNumero').value.trim(),
+      tipoHabitacion: { id: Number($('nuevaTipo').value) }
+    }) });
+    e.target.reset();
+    mostrar('Habitación agregada');
+    cargarHabitaciones();
+  } catch (err) {
+    mostrar(err.message, 'danger');
+  }
+});
+
+async function guardarHabitacion(id) {
+  try {
+    await api(`/api/habitaciones/${id}`, { method: 'PUT', body: JSON.stringify({
+      numero: $(`hab-num-${id}`).value.trim(),
+      tipoHabitacion: { id: Number($(`hab-tipo-${id}`).value) }
+    }) });
+    mostrar('Habitación actualizada');
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+async function eliminarHabitacion(id) {
+  if (!confirm('¿Eliminar esta habitación?')) return;
+  try {
+    await api(`/api/habitaciones/${id}`, { method: 'DELETE' });
+    mostrar('Habitación eliminada');
+    cargarHabitaciones();
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== TIPOS Y PRECIOS (solo ADMIN) =====
+async function cargarTipos() {
+  const tipos = await api('/api/tipos-habitacion');
+  tiposCache = tipos;
+  const check = (t, campo, etiqueta) => `
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="t-${t.id}-${campo}" ${t[campo] ? 'checked' : ''}>
+      <label class="form-check-label small" for="t-${t.id}-${campo}">${etiqueta}</label>
+    </div>`;
+  $('tabla-tipos').innerHTML = tipos.map(t => `
+    <div class="tarjeta p-4 mb-3">
+      <h3 class="h5 mb-3">${esc(t.nombre)}</h3>
+      <div class="row g-2 align-items-end">
+        <div class="col-md-2"><label class="form-label small">Precio por noche</label>
+          <input type="number" min="1" step="1" class="form-control" id="t-${t.id}-precioNoche" value="${t.precioNoche}"></div>
+        <div class="col-md-2"><label class="form-label small">Máx. personas</label>
+          <input type="number" min="1" class="form-control" id="t-${t.id}-capacidadMaxima" value="${t.capacidadMaxima}"></div>
+        <div class="col-md-2"><label class="form-label small">Tamaño</label>
+          <input class="form-control" id="t-${t.id}-tamano" value="${esc(t.tamano)}"></div>
+        <div class="col-md-3"><label class="form-label small">Tipo de cama</label>
+          <input class="form-control" id="t-${t.id}-tipoCama" value="${esc(t.tipoCama)}"></div>
+        <div class="col-md-3"><button class="btn btn-azul w-100" onclick="guardarTipo(${t.id})">Guardar cambios</button></div>
+      </div>
+      <div class="mt-3">
+        ${check(t, 'tieneWifi', 'Wi-Fi')}${check(t, 'tieneComida', 'Comidas y bebidas')}${check(t, 'tieneClima', 'Clima')}
+        ${check(t, 'tieneBano', 'Baño')}${check(t, 'tieneTv', 'Televisión')}${check(t, 'amueblada', 'Amueblada')}
+      </div>
+    </div>`).join('');
+}
+
+async function guardarTipo(id) {
+  const original = tiposCache.find(t => t.id === id);
+  const valor = (campo) => $(`t-${id}-${campo}`).value.trim();
+  const marcado = (campo) => $(`t-${id}-${campo}`).checked;
+  try {
+    await api(`/api/tipos-habitacion/${id}`, { method: 'PUT', body: JSON.stringify({
+      ...original,
+      precioNoche: Number(valor('precioNoche')),
+      capacidadMaxima: Number(valor('capacidadMaxima')),
+      tamano: valor('tamano') || null,
+      tipoCama: valor('tipoCama') || null,
+      tieneWifi: marcado('tieneWifi'),
+      tieneComida: marcado('tieneComida'),
+      tieneClima: marcado('tieneClima'),
+      tieneBano: marcado('tieneBano'),
+      tieneTv: marcado('tieneTv'),
+      amueblada: marcado('amueblada')
+    }) });
+    mostrar('Tipo de habitación actualizado');
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== RESENAS =====
+async function cargarResenas() {
+  const lista = await api('/api/resenas');
+  $('lista-resenas').innerHTML = lista.length ? lista.map(r => `
+    <div class="tarjeta p-3 mb-3 d-flex justify-content-between gap-3">
+      <div>
+        <strong>${esc(r.nombreCliente)}</strong> · ${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}
+        <span class="badge bg-secondary">${esc(r.clasificacion)}</span>
+        <p class="mb-1 mt-2">${esc(r.comentario)}</p>
+        <small class="text-muted">${new Date(r.fecha).toLocaleString('es-MX')}</small>
+      </div>
+      ${esAdmin() ? `<button class="btn btn-sm btn-outline-danger align-self-start" onclick="eliminarResena(${r.id})">Eliminar</button>` : ''}
+    </div>`).join('') : '<p class="text-muted">Aún no hay reseñas.</p>';
+}
+
+async function eliminarResena(id) {
+  if (!confirm('¿Eliminar esta reseña?')) return;
+  try {
+    await api(`/api/resenas/${id}`, { method: 'DELETE' });
+    mostrar('Reseña eliminada');
+    cargarResenas();
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== CLIENTES =====
+async function cargarClientes() {
+  const lista = await api('/api/clientes');
+  $('tabla-clientes').innerHTML = `
+    <table class="table table-hover bg-white">
+      <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Registro</th></tr></thead>
+      <tbody>${lista.map(c => `
+        <tr>
+          <td>${esc(c.nombre)}</td><td>${esc(c.telefono)}</td><td>${esc(c.email)}</td>
+          <td>${new Date(c.fechaRegistro).toLocaleDateString('es-MX')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+// ===== USUARIOS (solo ADMIN) =====
+async function cargarUsuarios() {
+  const lista = await api('/api/usuarios');
+  $('tabla-usuarios').innerHTML = `
+    <table class="table bg-white align-middle">
+      <thead><tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th></th></tr></thead>
+      <tbody>${lista.map(u => `
+        <tr>
+          <td>${esc(u.username)}</td><td>${esc(u.email)}</td><td>${esc(u.rol)}</td><td>${esc(u.estado)}</td>
+          <td>${u.username === 'sistema_web' ? '' : `<button class="btn btn-sm btn-outline-danger" onclick="eliminarUsuario(${u.id})">Eliminar</button>`}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+$('formUsuario').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await api('/api/usuarios', { method: 'POST', body: JSON.stringify({
+      username: $('uUsername').value.trim(),
+      password: $('uPassword').value,
+      email: $('uEmail').value.trim(),
+      rol: $('uRol').value,
+      estado: 'ACTIVO'
+    }) });
+    e.target.reset();
+    mostrar('Usuario creado');
+    cargarUsuarios();
+  } catch (err) {
+    mostrar(err.message, 'danger');
+  }
+});
+
+async function eliminarUsuario(id) {
+  if (!confirm('¿Eliminar este usuario?')) return;
+  try {
+    await api(`/api/usuarios/${id}`, { method: 'DELETE' });
+    mostrar('Usuario eliminado');
+    cargarUsuarios();
+  } catch (e) {
+    mostrar(e.message, 'danger');
+  }
+}
+
+// ===== ARRANQUE =====
+(async function iniciar() {
+  try {
+    sesion = await api('/api/sesion');
+    $('infoSesion').textContent = `${sesion.usuario} · ${sesion.rol === 'ADMIN' ? 'Administrador' : 'Recepcionista'}`;
+    if (!esAdmin()) document.querySelectorAll('.solo-admin').forEach(el => { el.hidden = true; });
+    document.querySelectorAll('[data-seccion]').forEach(btn =>
+      btn.addEventListener('shown.bs.tab', () => cargar(btn.dataset.seccion)));
+    cargar('reservaciones');
+  } catch (e) {
+    // api() ya redirige al login si no hay sesion
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel 3 Estrellas · Reservaciones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark barra-superior sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex aling-items-center gap-2" href="#inicio">
+      <img src="img/logo-hotel.png" alt="Hotel 3 Estrellas" class="logo-hotel" onerror="this.style.display='none'">
+      <span>Hotel 3 Estrellas</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="menuPrincipal">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="#habitaciones">Habitaciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="#reservar">Reservar</a></li>
+        <li class="nav-item"><a class="nav-link" href="#mapa">Ver mapa</a></li>
+        <li class="nav-item"><a class="nav-link" href="#opiniones">Ver opiniones</a></li>
+        <li class="nav-item"><a class="btn btn-whatsapp btn-sm px-3" href="https://wa.me/529681128923" target="_blank" rel="noopener">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- PORTADA -->
+<header id="inicio" class="hero">
+  <div class="foto-fondo">
+    <!-- ESPACIO PARA IMAGEN: src/main/resources/static/img/hero.jpg -->
+    <img src="img/hero.jpg" alt="Fachada del hotel" onerror="this.parentElement.classList.add('sin-foto')">
+  </div>
+  <div class="container hero-contenido">
+    <p class="etiqueta">Hotel 3 Estrellas · Copainalá, Chiapas</p>
+    <h1>Tu descanso comienza aquí</h1>
+    <p class="lead">Habitaciones cómodas y atención las 24 horas, de lunes a domingo.</p>
+    <a href="#reservar" class="btn btn-dorado btn-lg">Reservar ahora</a>
+  </div>
+</header>
+
+<!-- SERVICIOS -->
+<section class="franja-servicios">
+  <div class="container">
+    <div class="row g-4 text-center">
+      <div class="col-md-4"><div class="icono">🕒</div><h3 class="h5">Atención 24 horas</h3><p>De lunes a domingo, todos los días.</p></div>
+      <div class="col-md-4"><div class="icono">💳</div><h3 class="h5">Pago flexible</h3><p>Con tarjeta en línea o en efectivo.</p></div>
+      <div class="col-md-4"><div class="icono">📶</div><h3 class="h5">Wi-Fi en las habitaciones</h3><p>Conexión en todos nuestros cuartos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HABITACIONES: las fotos se agregan en los espacios marcados; precio, capacidad y servicios vienen de la base de datos -->
+<section id="habitaciones" class="py-5">
+  <div class="container">
+    <h2 class="titulo-seccion">Nuestras habitaciones</h2>
+    <div class="row g-4">
+
+      <div class="col-md-6 col-xl-3">
+        <article class="tarjeta-habitacion" data-tipo="Estándar">
+          <div class="galeria">
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/estandar-1.jpg -->
+              <img src="img/habitaciones/estandar-1.jpg" alt="Habitación Estándar" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 1</span>
+            </div>
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/estandar-2.jpg -->
+              <img src="img/habitaciones/estandar-2.jpg" alt="Habitación Estándar, detalle" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 2</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="h5">Habitación Estándar</h3>
+            <p class="descripcion">La opción básica y cómoda, con todo lo esencial para descansar.</p>
+            <ul class="lista-servicios">
+              <li data-servicio="tieneWifi">Wi-Fi</li>
+              <li data-servicio="tieneComida">Comidas y bebidas</li>
+              <li data-servicio="tieneClima">Clima</li>
+              <li data-servicio="tieneBano">Baño</li>
+              <li data-servicio="tieneTv">Televisión</li>
+              <li data-servicio="amueblada">Amueblada</li>
+            </ul>
+            <p class="dato">🛏️ <span data-campo="tipoCama"></span></p>
+            <p class="dato">👥 Máximo <span data-campo="capacidadMaxima"></span> personas</p>
+            <p class="dato">📐 <span data-campo="tamano"></span></p>
+            <div class="precio-bloque"><span class="precio" data-precio></span> <small>MXN / noche</small></div>
+            <button type="button" class="btn btn-azul w-100" data-reservar>Reservar este tipo</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <article class="tarjeta-habitacion" data-tipo="Superior">
+          <div class="galeria">
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/superior-1.jpg -->
+              <img src="img/habitaciones/superior-1.jpg" alt="Habitación Superior" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 1</span>
+            </div>
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/superior-2.jpg -->
+              <img src="img/habitaciones/superior-2.jpg" alt="Habitación Superior, detalle" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 2</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="h5">Habitación Superior</h3>
+            <p class="descripcion">Más espacio, mejor ubicación (pisos medios o mejores vistas) y mobiliario más cuidado.</p>
+            <ul class="lista-servicios">
+              <li data-servicio="tieneWifi">Wi-Fi</li>
+              <li data-servicio="tieneComida">Comidas y bebidas</li>
+              <li data-servicio="tieneClima">Clima</li>
+              <li data-servicio="tieneBano">Baño</li>
+              <li data-servicio="tieneTv">Televisión</li>
+              <li data-servicio="amueblada">Amueblada</li>
+            </ul>
+            <p class="dato">🛏️ <span data-campo="tipoCama"></span></p>
+            <p class="dato">👥 Máximo <span data-campo="capacidadMaxima"></span> personas</p>
+            <p class="dato">📐 <span data-campo="tamano"></span></p>
+            <div class="precio-bloque"><span class="precio" data-precio></span> <small>MXN / noche</small></div>
+            <button type="button" class="btn btn-azul w-100" data-reservar>Reservar este tipo</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <article class="tarjeta-habitacion" data-tipo="Junior Suite">
+          <div class="galeria">
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/junior-suite-1.jpg -->
+              <img src="img/habitaciones/junior-suite-1.jpg" alt="Junior Suite" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 1</span>
+            </div>
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/junior-suite-2.jpg -->
+              <img src="img/habitaciones/junior-suite-2.jpg" alt="Junior Suite, detalle" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 2</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="h5">Junior Suite</h3>
+            <p class="descripcion">Dormitorio con una pequeña zona de estar integrada: más amplitud para estancias largas.</p>
+            <ul class="lista-servicios">
+              <li data-servicio="tieneWifi">Wi-Fi</li>
+              <li data-servicio="tieneComida">Comidas y bebidas</li>
+              <li data-servicio="tieneClima">Clima</li>
+              <li data-servicio="tieneBano">Baño</li>
+              <li data-servicio="tieneTv">Televisión</li>
+              <li data-servicio="amueblada">Amueblada</li>
+            </ul>
+            <p class="dato">🛏️ <span data-campo="tipoCama"></span></p>
+            <p class="dato">👥 Máximo <span data-campo="capacidadMaxima"></span> personas</p>
+            <p class="dato">📐 <span data-campo="tamano"></span></p>
+            <div class="precio-bloque"><span class="precio" data-precio></span> <small>MXN / noche</small></div>
+            <button type="button" class="btn btn-azul w-100" data-reservar>Reservar este tipo</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <article class="tarjeta-habitacion" data-tipo="Familiar">
+          <div class="galeria">
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/familiar-1.jpg -->
+              <img src="img/habitaciones/familiar-1.jpg" alt="Habitación Familiar" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 1</span>
+            </div>
+            <div class="foto-espacio">
+              <!-- FOTO: static/img/habitaciones/familiar-2.jpg -->
+              <img src="img/habitaciones/familiar-2.jpg" alt="Habitación Familiar, detalle" onerror="this.parentElement.classList.add('sin-foto')">
+              <span>📷 Foto 2</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="h5">Habitación Familiar</h3>
+            <p class="descripcion">Pensada para grupos: camas adicionales, literas o una distribución amplia.</p>
+            <ul class="lista-servicios">
+              <li data-servicio="tieneWifi">Wi-Fi</li>
+              <li data-servicio="tieneComida">Comidas y bebidas</li>
+              <li data-servicio="tieneClima">Clima</li>
+              <li data-servicio="tieneBano">Baño</li>
+              <li data-servicio="tieneTv">Televisión</li>
+              <li data-servicio="amueblada">Amueblada</li>
+            </ul>
+            <p class="dato">🛏️ <span data-campo="tipoCama"></span></p>
+            <p class="dato">👥 Máximo <span data-campo="capacidadMaxima"></span> personas</p>
+            <p class="dato">📐 <span data-campo="tamano"></span></p>
+            <div class="precio-bloque"><span class="precio" data-precio></span> <small>MXN / noche</small></div>
+            <button type="button" class="btn btn-azul w-100" data-reservar>Reservar este tipo</button>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESERVAR -->
+<section id="reservar" class="py-5 seccion-clara">
+  <div class="container">
+    <h2 class="titulo-seccion">Reserva tu habitación</h2>
+    <div class="row g-4">
+
+      <div class="col-lg-7">
+        <form id="formBusqueda" class="tarjeta p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="tipo">Tipo de habitación</label>
+              <select id="tipo" class="form-select" required><option value="">Cargando...</option></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="personas">Personas <span id="ayudaPersonas" class="ayuda"></span></label>
+              <input id="personas" type="number" min="1" value="1" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="entrada">Fecha de entrada</label>
+              <input id="entrada" type="date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="salida">Fecha de salida</label>
+              <input id="salida" type="date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="metodoPago">Método de pago</label>
+              <select id="metodoPago" class="form-select">
+                <option value="TARJETA">Tarjeta</option>
+                <option value="EFECTIVO">Efectivo</option>
+              </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <button class="btn btn-azul w-100" type="submit">Ver habitaciones disponibles</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="panelHabitaciones" class="tarjeta p-4 mt-4" hidden>
+          <h3 class="h5">Elige tu habitación</h3>
+          <p class="ayuda mb-3">Verde = disponible · Gris = ocupada en esas fechas</p>
+          <div id="listaHabitaciones" class="grid-habitaciones"></div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <form id="formReserva" class="tarjeta p-4" hidden>
+          <h3 class="h5">Tu reservación</h3>
+          <div id="resumen" class="mb-4"></div>
+          <div class="mb-3">
+            <label class="form-label" for="nombre">Nombre completo</label>
+            <input id="nombre" class="form-control" maxlength="100" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="email">Correo electrónico</label>
+            <input id="email" type="email" class="form-control" maxlength="100" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label" for="telefono">Teléfono</label>
+            <input id="telefono" type="tel" class="form-control" maxlength="20" required>
+          </div>
+          <button id="btnConfirmar" class="btn btn-dorado w-100 btn-lg" type="submit">Confirmar reservación</button>
+        </form>
+        <div id="aviso" class="alert mt-3" hidden></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OPINIONES -->
+<section id="opiniones" class="py-5">
+  <div class="container">
+    <h2 class="titulo-seccion">Opiniones de nuestros huéspedes</h2>
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="tarjeta p-4 text-center">
+          <div class="promedio" id="promedio">—</div>
+          <div id="promedioEstrellas" class="estrellas-fijas"></div>
+          <p id="totalResenas" class="ayuda mb-0"></p>
+        </div>
+
+        <form id="formResena" class="tarjeta p-4 mt-4">
+          <h3 class="h5">Deja tu opinión</h3>
+          <input id="resNombre" class="form-control mb-3" placeholder="Tu nombre" maxlength="100" required>
+          <div id="selectorEstrellas" class="selector-estrellas">
+            <button type="button" data-valor="1" aria-label="1 estrella">★</button>
+            <button type="button" data-valor="2" aria-label="2 estrellas">★</button>
+            <button type="button" data-valor="3" aria-label="3 estrellas">★</button>
+            <button type="button" data-valor="4" aria-label="4 estrellas">★</button>
+            <button type="button" data-valor="5" aria-label="5 estrellas">★</button>
+          </div>
+          <p id="textoCalificacion" class="ayuda mb-3">Selecciona de 1 a 5 estrellas</p>
+          <textarea id="resComentario" class="form-control mb-3" rows="4" maxlength="1000" placeholder="¿Cómo fue tu estancia?" required></textarea>
+          <button class="btn btn-azul w-100" type="submit">Publicar opinión</button>
+          <div id="resMensaje" class="alert mt-3" hidden></div>
+        </form>
+      </div>
+      <div class="col-lg-7">
+        <div id="listaResenas"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACION -->
+<section id="mapa" class="py-5 seccion-clara">
+  <div class="container">
+    <h2 class="titulo-seccion">Ubicación</h2>
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-4">
+        <div class="tarjeta p-4 h-100">
+          <h3 class="h5">📍 Dirección</h3>
+          <p class="mb-4">Primera Ote. Nte. 130, Concepción<br>29620 Copainalá, Chis., México</p>
+          <a class="btn btn-azul w-100 mb-2" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&query=Primera+Ote.+Nte.+130%2C+Concepci%C3%B3n%2C+29620+Copain%C3%A1l%C3%A1%2C+Chis.%2C+M%C3%A9xico">Ver en Google Maps</a>
+          <a class="btn btn-whatsapp w-100 mb-2" href="https://wa.me/529681128923" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-outline-secondary w-100" href="tel:+529681128923">Llamar: 968 112 8923</a>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <iframe class="mapa" title="Mapa del hotel" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=Primera+Ote.+Nte.+130,+Concepci%C3%B3n,+29620+Copain%C3%A1l%C3%A1,+Chis.,+M%C3%A9xico&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="pie">
+  <div class="container text-center">
+    <p class="mb-1 fw-bold">Hotel 3 Estrellas</p>
+    <p class="mb-0 small">@Hotel 3 estrellas. Primera Ote. Nte. 130, Concepción, Copainalá, Chiapas · Tel. 968 112 8923</p>
+  </div>
+</footer>
+
+<a class="whatsapp-flotante" href="https://wa.me/529681128923" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">💬</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+let tipos = [];
+let busqueda = null;
+let habitacionElegida = null;
+let calificacion = 0;
+
+function esc(texto) {
+  const d = document.createElement('div');
+  d.textContent = texto ?? '';
+  return d.innerHTML;
+}
+function formatoPesos(n) {
+  return Number(n).toLocaleString('es-MX', { maximumFractionDigits: 0 });
+}
+function hoyLocal() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+function calcularNoches(entrada, salida) {
+  return Math.round((new Date(salida) - new Date(entrada)) / 86400000);
+}
+async function leerError(res) {
+  const texto = await res.text();
+  try { return JSON.parse(texto).error || 'Ocurrió un error'; }
+  catch (e) { return texto || 'Ocurrió un error'; }
+}
+function avisoEn(id, texto, tipo) {
+  const el = $(id);
+  el.className = `alert alert-${tipo} mt-3`;
+  el.textContent = texto;
+  el.hidden = false;
+}
+
+// ----- Tipos de habitacion: el texto de las tarjetas viene de la base de datos -----
+async function cargarTipos() {
+  const res = await fetch('/api/tipos-habitacion');
+  tipos = await res.json();
+  $('tipo').innerHTML = '<option value="">Selecciona un tipo</option>' + tipos.map(t =>
+    `<option value="${t.id}">${esc(t.nombre)} · $${formatoPesos(t.precioNoche)} por noche</option>`).join('');
+
+  document.querySelectorAll('.tarjeta-habitacion').forEach(card => {
+    const t = tipos.find(x => x.nombre === card.dataset.tipo);
+    if (!t) return;
+    card.querySelectorAll('[data-campo]').forEach(el => {
+      const valor = t[el.dataset.campo];
+      el.textContent = valor ?? '';
+      if (valor === null || valor === undefined || valor === '') el.closest('.dato').hidden = true;
+    });
+    card.querySelectorAll('[data-servicio]').forEach(li => {
+      const activo = !!t[li.dataset.servicio];
+      li.classList.toggle('incluido', activo);
+      li.classList.toggle('no-incluido', !activo);
+    });
+    card.querySelector('[data-precio]').textContent = `$${formatoPesos(t.precioNoche)}`;
+    card.querySelector('[data-reservar]').addEventListener('click', () => {
+      $('tipo').value = t.id;
+      actualizarAyudaPersonas();
+      $('reservar').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  actualizarAyudaPersonas();
+}
+
+function actualizarAyudaPersonas() {
+  const tipo = tipos.find(t => String(t.id) === $('tipo').value);
+  $('personas').max = tipo ? tipo.capacidadMaxima : 6;
+  $('ayudaPersonas').textContent = tipo ? `(máximo ${tipo.capacidadMaxima})` : '';
+}
+$('tipo').addEventListener('change', actualizarAyudaPersonas);
+
+// ----- Fechas -----
+$('entrada').min = hoyLocal();
+$('salida').min = hoyLocal();
+$('entrada').addEventListener('change', () => {
+  const [y, m, d] = $('entrada').value.split('-').map(Number);
+  if (y) $('salida').min = new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
+});
+
+// ----- Buscar disponibilidad -----
+$('formBusqueda').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('aviso').hidden = true;
+  const tipo = tipos.find(t => String(t.id) === $('tipo').value);
+  const entrada = $('entrada').value;
+  const salida = $('salida').value;
+  const personas = Number($('personas').value);
+
+  if (!tipo) return avisoEn('aviso', 'Selecciona un tipo de habitación.', 'warning');
+  if (!entrada || !salida) return avisoEn('aviso', 'Indica las fechas de entrada y salida.', 'warning');
+  if (entrada < hoyLocal()) return avisoEn('aviso', 'La fecha de entrada no puede ser anterior a hoy.', 'warning');
+  const noches = calcularNoches(entrada, salida);
+  if (noches < 1) return avisoEn('aviso', 'La fecha de salida debe ser posterior a la de entrada.', 'warning');
+  if (!(personas >= 1 && personas <= tipo.capacidadMaxima)) {
+    return avisoEn('aviso', `Este tipo de habitación admite máximo ${tipo.capacidadMaxima} personas.`, 'warning');
+  }
+
+  const res = await fetch(`/api/habitaciones/disponibilidad?tipoId=${tipo.id}&entrada=${entrada}&salida=${salida}`);
+  if (!res.ok) return avisoEn('aviso', await leerError(res), 'danger');
+  const lista = await res.json();
+
+  busqueda = { tipo, entrada, salida, personas, noches };
+  habitacionElegida = null;
+  $('formReserva').hidden = true;
+  pintarHabitaciones(lista);
+  $('panelHabitaciones').hidden = false;
+});
+
+function pintarHabitaciones(lista) {
+  $('listaHabitaciones').innerHTML = lista.length ? lista.map(h => `
+    <button type="button" class="chip-habitacion ${h.disponible ? 'libre' : 'ocupada'}"
+            data-numero="${esc(h.numero)}" ${h.disponible ? '' : 'disabled'}>
+      ${esc(h.numero)}<small>${h.disponible ? 'Disponible' : 'Ocupada'}</small>
+    </button>`).join('') : '<p class="ayuda">No hay habitaciones de este tipo.</p>';
+}
+
+$('listaHabitaciones').addEventListener('click', (e) => {
+  const boton = e.target.closest('[data-numero]');
+  if (!boton || boton.disabled) return;
+  habitacionElegida = boton.dataset.numero;
+  document.querySelectorAll('.chip-habitacion').forEach(b => b.classList.toggle('elegida', b === boton));
+  mostrarResumen();
+});
+
+function mostrarResumen() {
+  const total = busqueda.tipo.precioNoche * busqueda.noches;
+  const metodo = $('metodoPago').value === 'EFECTIVO' ? 'Efectivo' : 'Tarjeta';
+  $('resumen').innerHTML = `
+    <ul class="lista-resumen">
+      <li><span>Habitación</span><strong>${esc(habitacionElegida)} · ${esc(busqueda.tipo.nombre)}</strong></li>
+      <li><span>Entrada → salida</span><strong>${busqueda.entrada} → ${busqueda.salida}</strong></li>
+      <li><span>Noches</span><strong>${busqueda.noches}</strong></li>
+      <li><span>Personas</span><strong>${busqueda.personas}</strong></li>
+      <li><span>Precio por noche</span><strong>$${formatoPesos(busqueda.tipo.precioNoche)}</strong></li>
+      <li><span>Método de pago</span><strong>${metodo}</strong></li>
+      <li class="total"><span>Total</span><strong>$${formatoPesos(total)} MXN</strong></li>
+    </ul>`;
+  $('formReserva').hidden = false;
+  $('formReserva').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ----- Confirmar reservacion -----
+$('formReserva').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!habitacionElegida) return avisoEn('aviso', 'Elige una habitación disponible.', 'warning');
+  const body = {
+    nombre: $('nombre').value.trim(),
+    email: $('email').value.trim(),
+    telefono: $('telefono').value.trim(),
+    tipoHabitacionId: busqueda.tipo.id,
+    numeroHabitacion: habitacionElegida,
+    fechaEntrada: busqueda.entrada,
+    fechaSalida: busqueda.salida,
+    numeroHuespedes: busqueda.personas,
+    metodoPago: $('metodoPago').value
+  };
+  $('btnConfirmar').disabled = true;
+  try {
+    const res = await fetch('/api/reservaciones', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const msg = await leerError(res);
+      avisoEn('aviso', msg, 'danger');
+      if (msg.includes('disponible')) $('formBusqueda').requestSubmit();
+      return;
+    }
+    const c = await res.json();
+    avisoEn('aviso', `¡Reservación confirmada! Habitación ${c.habitacion} (${c.tipoHabitacion}), del ${c.fechaEntrada} al ${c.fechaSalida}, ${c.noches} noche(s). Total: $${formatoPesos(c.total)} MXN. Método de pago: ${c.metodoPago === 'EFECTIVO' ? 'efectivo' : 'tarjeta'}.`, 'success');
+    $('formReserva').reset();
+    $('formReserva').hidden = true;
+    $('panelHabitaciones').hidden = true;
+    habitacionElegida = null;
+    busqueda = null;
+  } catch (err) {
+    avisoEn('aviso', 'No se pudo conectar con el servidor. Intenta de nuevo.', 'danger');
+  } finally {
+    $('btnConfirmar').disabled = false;
+  }
+});
+
+// ----- Opiniones -----
+function etiquetaCalificacion(v) {
+  return v === 5 ? 'Buena' : v === 1 ? 'Mala' : 'Regular';
+}
+function actualizarEstrellas() {
+  document.querySelectorAll('#selectorEstrellas button').forEach(b =>
+    b.classList.toggle('activa', Number(b.dataset.valor) <= calificacion));
+  $('textoCalificacion').textContent = calificacion
+    ? `${calificacion} estrella(s): ${etiquetaCalificacion(calificacion)}`
+    : 'Selecciona de 1 a 5 estrellas';
+}
+document.querySelectorAll('#selectorEstrellas button').forEach(b =>
+  b.addEventListener('click', () => {
+    calificacion = Number(b.dataset.valor);
+    actualizarEstrellas();
+  }));
+
+async function cargarResenas() {
+  const res = await fetch('/api/resenas');
+  const lista = await res.json();
+  if (!lista.length) {
+    $('promedio').textContent = '—';
+    $('promedioEstrellas').textContent = '';
+    $('totalResenas').textContent = 'Aún no hay opiniones.';
+    $('listaResenas').innerHTML = '<p class="ayuda">¡Sé el primero en opinar!</p>';
+    return;
+  }
+  const prom = lista.reduce((a, r) => a + r.calificacion, 0) / lista.length;
+  const redondeo = Math.round(prom);
+  $('promedio').textContent = prom.toFixed(1);
+  $('promedioEstrellas').textContent = '★'.repeat(redondeo) + '☆'.repeat(5 - redondeo);
+  $('totalResenas').textContent = `${lista.length} opinión(es)`;
+  $('listaResenas').innerHTML = lista.map(r => `
+    <article class="tarjeta resena mb-3 p-4">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <strong>${esc(r.nombreCliente)}</strong>
+        <span class="badge badge-${esc(r.clasificacion.toLowerCase())}">${esc(r.clasificacion)}</span>
+      </div>
+      <div class="estrellas-fijas">${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}</div>
+      <p class="mb-1">${esc(r.comentario)}</p>
+      <small class="ayuda">${new Date(r.fecha).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</small>
+    </article>`).join('');
+}
+
+$('formResena').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (calificacion < 1) return avisoEn('resMensaje', 'Selecciona de 1 a 5 estrellas.', 'warning');
+  const res = await fetch('/api/resenas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombreCliente: $('resNombre').value.trim(),
+      comentario: $('resComentario').value.trim(),
+      calificacion
+    })
+  });
+  if (!res.ok) return avisoEn('resMensaje', await leerError(res), 'danger');
+  avisoEn('resMensaje', '¡Gracias por tu opinión!', 'success');
+  $('formResena').reset();
+  calificacion = 0;
+  actualizarEstrellas();
+  cargarResenas();
+});
+
+// ----- Arranque -----
+cargarTipos().catch(() => avisoEn('aviso', 'No se pudieron cargar las habitaciones. Revisa que el servidor esté activo.', 'danger'));
+cargarResenas().catch(() => {});
+</script>
+</body>
+</html>

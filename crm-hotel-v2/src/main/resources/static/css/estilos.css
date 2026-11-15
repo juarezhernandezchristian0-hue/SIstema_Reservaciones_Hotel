@@ -1,0 +1,189 @@
+:root {
+  --azul: #38578a;
+  --azul-2: #5481aa;
+  --dorado: #c9a227;
+  --crema: #faf7f0;
+  --texto: #2b2b2b;
+  --verde: #2e7d32;
+  --whatsapp: #25d366;
+}
+
+[hidden] { display: none !important; }
+
+body {
+  background: var(--crema);
+  color: var(--texto);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+
+/* ----- Barra y botones ----- */
+.barra-superior { background: var(--azul) !important; }
+.navbar-brand { color: #fff !important; }
+.barra-superior.nav-link { color: #e8e8e8 !important; }
+.barra-superior.nav-link:hover { color: var(--dorado) !important; }
+.btn-dorado { background: var(--dorado); color: var(--azul); border: none; font-weight: 600; }
+.btn-dorado:hover { background: #b38f1e; color: #fff; }
+.btn-azul { background: var(--azul); color: #fff; border: none; font-weight: 600; }
+.btn-azul:hover { background: var(--azul-2); color: #fff; }
+.btn-whatsapp { background: var(--whatsapp); color: #fff; border: none; font-weight: 600; }
+.btn-whatsapp:hover { background: #1ebe5a; color: #fff; }
+
+/* ----- Portada ----- */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(27, 42, 65, .95), rgba(50, 74, 95, .85));
+  color: #fff;
+  overflow: hidden;
+}
+.foto-fondo { position: absolute; inset: 0; }
+.foto-fondo img { width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.sin-foto > img { display: none; }
+.hero-contenido { position: relative; z-index: 1; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 700; }
+.hero .etiqueta { color: var(--dorado); letter-spacing: .08em; text-transform: uppercase; font-size: .85rem; }
+
+/* ----- Franja de servicios ----- */
+.franja-servicios { background: #fff; padding: 2.5rem 0; box-shadow: 0 6px 20px rgba(0, 0, 0, .05); }
+.franja-servicios .icono { font-size: 2rem; }
+
+/* ----- Titulos ----- */
+.titulo-seccion { text-align: center; color: var(--azul); font-weight: 700; margin-bottom: 2.2rem; }
+.titulo-seccion::after {
+  content: '';
+  display: block;
+  width: 70px;
+  height: 3px;
+  background: var(--dorado);
+  margin: .6rem auto 0;
+}
+.seccion-clara { background: #fff; }
+
+/* ----- Tarjetas ----- */
+.tarjeta { background: #fff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, .08); }
+.tarjeta-habitacion {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.tarjeta-habitacion:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0, 0, 0, .14); }
+.tarjeta-habitacion h3 { color: var(--azul); }
+.descripcion { color: #555; min-height: 3.2em; }
+
+/* ----- Espacios para fotos ----- */
+.galeria { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.foto-espacio {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(45deg, #ebe6da, #ebe6da 10px, #f4f0e7 10px, #f4f0e7 20px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: #8a7f66;
+  font-size: .8rem;
+  padding-bottom: .4rem;
+}
+.foto-espacio img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.foto-espacio span { position: relative; background: rgba(255, 255, 255, .75); padding: 0 .4rem; border-radius: 4px; }
+
+/* ----- Servicios de cada habitacion ----- */
+.lista-servicios { list-style: none; padding: 0; margin: 0 0 .8rem; display: grid; grid-template-columns: 1fr 1fr; gap: .25rem .5rem; font-size: .9rem; }
+.lista-servicios li::before { margin-right: .35rem; font-weight: 700; }
+.lista-servicios .incluido::before { content: '✔'; color: var(--verde); }
+.lista-servicios .no-incluido { color: #aaa; text-decoration: line-through; }
+.lista-servicios .no-incluido::before { content: '✖'; color: #c62828; text-decoration: none; display: inline-block; }
+.dato { margin-bottom: .3rem; font-size: .92rem; }
+.precio-bloque { margin: .9rem 0; color: var(--azul); }
+.precio { font-size: 1.9rem; font-weight: 700; color: var(--dorado); }
+
+/* ----- Disponibilidad: habitaciones por numero ----- */
+.grid-habitaciones { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+.chip-habitacion {
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 10px 4px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+.chip-habitacion small { display: block; font-weight: 400; font-size: .7rem; }
+.chip-habitacion.libre { border-color: var(--verde); color: var(--verde); }
+.chip-habitacion.libre:hover { background: #e8f5e9; }
+.chip-habitacion.ocupada { border-color: #d0d0d0; color: #aaa; background: #f3f3f3; cursor: not-allowed; }
+.chip-habitacion.elegida { background: var(--verde); color: #fff; border-color: var(--verde); }
+
+.lista-resumen { list-style: none; padding: 0; margin: 0; }
+.lista-resumen li { display: flex; justify-content: space-between; padding: .45rem 0; border-bottom: 1px dashed #e2dccd; }
+.lista-resumen li.total { border-bottom: none; font-size: 1.15rem; color: var(--azul); }
+.lista-resumen li.total strong { color: var(--dorado); }
+.ayuda { color: #777; font-size: .88rem; }
+
+/* ----- Opiniones ----- */
+.promedio { font-size: 3rem; font-weight: 700; color: var(--azul); line-height: 1; }
+.estrellas-fijas { color: var(--dorado); font-size: 1.3rem; letter-spacing: 2px; }
+.selector-estrellas button {
+  background: none;
+  border: none;
+  font-size: 2.1rem;
+  color: #ccc;
+  padding: 0 .15rem;
+  line-height: 1;
+}
+.selector-estrellas button.activa { color: var(--dorado); }
+.badge-buena { background: var(--verde) !important; }
+.badge-regular { background: #b7791f !important; }
+.badge-mala { background: #c62828 !important; }
+.resena .badge { font-size: .8rem; }
+
+/* ----- Mapa ----- */
+.mapa { width: 100%; height: 100%; min-height: 380px; border: 0; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, .08); }
+
+/* ----- Pie y boton flotante ----- */
+.pie { background: var(--azul); color: #dfe6ee; padding: 2rem 0; }
+.whatsapp-flotante {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--whatsapp);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  z-index: 1000;
+  text-decoration: none;
+}
+.whatsapp-flotante:hover { color: #fff; transform: scale(1.06); }
+
+/* ----- Login y panel ----- */
+.pagina-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--azul), var(--azul-2));
+}
+.login-caja { width: 100%; max-width: 400px; }
+.pagina-admin .tarjeta { box-shadow: 0 4px 14px rgba(0, 0, 0, .06); }
+.pagina-admin .table { font-size: .92rem; }
+
+@media (max-width: 576px) {
+  .lista-servicios { grid-template-columns: 1fr; }
+  .whatsapp-flotante { width: 52px; height: 52px; font-size: 1.5rem; }
+}
+
+.logo-hotel{
+  height: 46px;
+  width: auto;
+  border-radius: 6px;
+}

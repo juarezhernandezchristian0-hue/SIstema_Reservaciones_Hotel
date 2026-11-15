@@ -1,0 +1,18 @@
+ESPACIOS PARA IMAGENES DEL SITIO
+================================
+Pon tus fotos en esta carpeta con EXACTAMENTE estos nombres.
+Si una foto no existe, el sitio muestra un recuadro gris con el texto "Foto".
+
+  img/hero.jpg                          Portada (fachada del hotel)
+
+  img/habitaciones/estandar-1.jpg       Habitacion Estandar (foto 1)
+  img/habitaciones/estandar-2.jpg       Habitacion Estandar (foto 2)
+  img/habitaciones/superior-1.jpg       Habitacion Superior (foto 1)
+  img/habitaciones/superior-2.jpg       Habitacion Superior (foto 2)
+  img/habitaciones/junior-suite-1.jpg   Junior Suite (foto 1)
+  img/habitaciones/junior-suite-2.jpg   Junior Suite (foto 2)
+  img/habitaciones/familiar-1.jpg       Habitacion Familiar (foto 1)
+  img/habitaciones/familiar-2.jpg       Habitacion Familiar (foto 2)
+
+Formato recomendado: .jpg, horizontal (4:3), de al menos 1200 px de ancho.
+Despues de agregar las fotos, recarga la pagina (Ctrl + F5).
